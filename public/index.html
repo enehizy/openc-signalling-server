@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket.IO HTTPS Example</title>
+</head>
+<body>
+    <input id="message" type="text">
+    <button onclick="sendMessage()">Send</button>
+    <div id="messages"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Connect using wss:// for HTTPS
+        const socket = io('wss://' + location.host, {
+            secure: true,
+            rejectUnauthorized: false // Only for development with self-signed certs
+        });
+
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        socket.on('message', (msg) => {
+            const messages = document.getElementById('messages');
+            messages.innerHTML += '<p>' + msg + '</p>';
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('message');
+            socket.emit('message', input.value);
+            input.value = '';
+        }
+    </script>
+</body>
+</html>
