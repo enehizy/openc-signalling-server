@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { MAX } from 'uuid';
+import { v4 } from 'uuid';
 const connectSocket = (httpsServer: any) => {
   const io = new Server(httpsServer, {
     cors: {
@@ -12,27 +12,67 @@ const connectSocket = (httpsServer: any) => {
   const CANDIDATES = 'icecandidates';
   const OFFERS = 'offers';
   const ANSWERS = 'answers';
+  const JOIN = 'join';
   const NEW_PEER = 'newpeer';
+  const FIRST_PEERS = 'firstpeers';
 
-  //global variables
-  const MAX_PEERS = 7;
-  const peerIds = [
-    'id_1a2b3c',
-    'id_4d5e6f',
-    'id_7g8h9i',
-    'id_jk10lm',
-    'id_nop11q',
-  ];
   const peers = new Set();
 
+  const peerIds = new Map();
   io.on('connection', (socket) => {
-    peers.add(socket.id);
     console.log('connecting to socket');
-    if (peers.size > MAX_PEERS) {
-      console.log(`${socket.id} disconnected MAXIMUM PEERS IS ${MAX_PEERS}`);
-      socket.disconnect();
-      return;
-    }
+
+    //   peers.add(socket.id);
+    // if (peers.size > MAX_PEERS) {
+    //   console.log(`${socket.id} disconnected MAXIMUM PEERS IS ${MAX_PEERS}`);
+    //   socket.disconnect();
+    //   return;
+    // }
+
+    socket.on(JOIN, (data) => {
+      console.log('joining');
+      peers.add(socket.id);
+      if (peers.size == 1) {
+        socket.join(FIRST_PEERS);
+      }
+      if (peers.size == 2) {
+        socket.join(FIRST_PEERS);
+        socket.to(FIRST_PEERS).emit(NEW_PEER, FIRST_PEERS);
+      }
+      if (peers.size >= 3) {
+        const id = v4();
+        socket.join(id);
+        peers.forEach((socketId) => {
+          if (socketId === socket.id) {
+            return;
+          }
+          const peer = io.sockets.sockets.get(socketId as any);
+          peer?.join(id);
+          //all peers apart from the new peer should send a new peer event
+          peer?.to(id).emit(NEW_PEER, id);
+          socket.to(id).emit(NEW_PEER, id);
+        });
+      }
+    });
+
+    socket.on(OFFERS, (offers, peerId) => {
+      console.log('got and offer');
+      // console.log({ offers });
+
+      socket.to(peerId).emit(OFFERS, { offers, peerId });
+    });
+
+    socket.on(ANSWERS, (answers, peerId) => {
+      console.log('got an answer');
+
+      socket.to(peerId).emit(ANSWERS, { answers, peerId });
+    });
+
+    socket.on(CANDIDATES, (candidates, peerId) => {
+      console.log('got ice candidates');
+
+      socket.to(peerId).emit(CANDIDATES, { candidates, peerId });
+    });
 
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);
@@ -44,48 +84,5 @@ const connectSocket = (httpsServer: any) => {
       }
     });
   });
-
-  //   const saved_offer: Map<String, { socketId: string; offers: any }> = new Map();
-  //   // const joined_users:any[] = [];
-  //   const saved_ice_candidate = new Map();
-  //   let offer_triggered = false;
-  //   io.on('connection', (socket) => {
-  //     socket.on(CANDIDATES, (data) => {
-  //       console.log('got candidates');
-  //       saved_ice_candidate.set(data.roomId, data.candidates);
-  //       io.to(data.roomId).emit(CANDIDATES, data.candidates);
-  //     });
-
-  //     socket.on(OFFERS, (data) => {
-  //       console.log('got offers');
-  //       saved_offer.set(data.roomId, data.offers);
-  //       io.to(data.roomId).except(socket.id).emit(OFFERS, data.offers);
-  //     });
-  //     socket.on(ANSWERS, (data: { roomId: string; answers: any }) => {
-  //       console.log('got answers');
-  //       socket.to(joined_users[0]).emit(OFFERS, data.answers);
-  //     });
-  //     const getUsersInRoom = (roomId) => {
-  //       const room = io.sockets.adapter.rooms.get(roomId);
-  //       return room ? Array.from(room) : []; // Convert Set to Array
-  //     };
-  //     socket.on('join', (roomId) => {
-  //       //  socket.leave(roomId)
-  //       console.log(`${socket.id} joined ${roomId}`);
-  //       socket.join(roomId);
-  //       const joined_users = getUsersInRoom(roomId);
-
-  //       if (joined_users.length == 2) {
-  //         io.to(joined_users[0]).emit('call');
-  //       }
-  //       if (joined_users.length > 2) {
-  //         socket.to(roomId).emit('call');
-  //       }
-  //     });
-
-  //     socket.on('disconnect', (socket) => {
-  //       saved_offer.clear();
-  //     });
-  //   });
 };
 export default connectSocket;
