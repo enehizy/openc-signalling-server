@@ -15,10 +15,9 @@ const connectSocket = (httpsServer: any) => {
   const JOIN = 'join';
   const NEW_PEER = 'newpeer';
   const FIRST_PEERS = 'firstpeers';
+  const PEER_DISCONNECTED = 'peerdisconnected';
+  const peers = new Map();
 
-  const peers = new Set();
-
-  const peerIds = new Map();
   io.on('connection', (socket) => {
     console.log('connecting to socket');
 
@@ -31,28 +30,19 @@ const connectSocket = (httpsServer: any) => {
 
     socket.on(JOIN, (data) => {
       console.log('joining');
-      peers.add(socket.id);
-      if (peers.size == 1) {
-        socket.join(FIRST_PEERS);
-      }
-      if (peers.size == 2) {
-        socket.join(FIRST_PEERS);
-        socket.to(FIRST_PEERS).emit(NEW_PEER, FIRST_PEERS);
-      }
-      if (peers.size >= 3) {
-        const id = v4();
-        socket.join(id);
-        peers.forEach((socketId) => {
-          if (socketId === socket.id) {
-            return;
-          }
-          const peer = io.sockets.sockets.get(socketId as any);
-          peer?.join(id);
-          //all peers apart from the new peer should send a new peer event
-          peer?.to(id).emit(NEW_PEER, id);
-          socket.to(id).emit(NEW_PEER, id);
-        });
-      }
+      const id = v4();
+      socket.join(id);
+      peers.set(socket.id, id);
+      peers.forEach((_, socketId) => {
+        if (socketId === socket.id) {
+          return;
+        }
+        const peer = io.sockets.sockets.get(socketId as any);
+        peer?.join(id);
+        //all peers apart from the new peer should send a new peer event
+        peer?.to(id).emit(NEW_PEER, id);
+        socket.to(id).emit(NEW_PEER, id);
+      });
     });
 
     socket.on(OFFERS, (offers, peerId) => {
@@ -76,6 +66,9 @@ const connectSocket = (httpsServer: any) => {
 
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);
+      const peerId = peers.get(socket.id);
+
+      io.emit(PEER_DISCONNECTED, peerId);
       peers.delete(socket.id);
       // Check if all users are disconnected
       if (io.engine.clientsCount === 0) {
