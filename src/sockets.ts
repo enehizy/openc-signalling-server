@@ -10,14 +10,15 @@ const connectSocket = (httpsServer: any) => {
 
   //event triggers
   const CANDIDATES = 'icecandidates';
+  const ID = 'id';
   const OFFERS = 'offers';
   const ANSWERS = 'answers';
   const JOIN = 'join';
   const NEW_PEER = 'newpeer';
   const FIRST_PEERS = 'firstpeers';
   const PEER_DISCONNECTED = 'peerdisconnected';
-  const peers = new Map();
-
+  const peers = new Set();
+  let first_peer_id;
   io.on('connection', (socket) => {
     console.log('connecting to socket');
 
@@ -29,46 +30,68 @@ const connectSocket = (httpsServer: any) => {
     // }
 
     socket.on(JOIN, (data) => {
+      // should brodcast new peer message with peer id of new peer to every peer
       console.log('joining');
-      const id = v4();
-      socket.join(id);
-      peers.set(socket.id, id);
-      peers.forEach((_, socketId) => {
-        if (socketId === socket.id) {
-          return;
-        }
-        const peer = io.sockets.sockets.get(socketId as any);
-        peer?.join(id);
-        //all peers apart from the new peer should send a new peer event
-        peer?.to(id).emit(NEW_PEER, id);
-        socket.to(id).emit(NEW_PEER, id);
-      });
+      const new_peer_id = socket.id;
+      peers.add(new_peer_id);
+      socket.broadcast.emit(NEW_PEER, new_peer_id);
+
+      // const id = v4();
+      // socket.join(id);
+      // peers.set(socket.id, id);
+      // peers.keys().forEach((socketId) => {
+      //   if (socketId === socket.id) {
+      //     return;
+      //   }
+      //   const peer = io.sockets.sockets.get(socketId as any);
+      //   peer?.join(id);
+      //   //all peers apart from the new peer should send a new peer event
+      //   peer?.to(id).emit(NEW_PEER, id);
+      //   socket.to(id).emit(NEW_PEER, id);
+      // });
     });
 
-    socket.on(OFFERS, (offers, peerId) => {
+    socket.on(OFFERS, (data) => {
       console.log('got and offer');
+      // should recieve an offer from any existing peer and forward it to the new peer with its id
+      const existing_peer = socket;
       // console.log({ offers });
+      // this means there are no exisying peers
+      // if (socket.id == peerId) return;
 
-      socket.to(peerId).emit(OFFERS, { offers, peerId });
+      existing_peer
+        .to(data.peerId)
+        .emit(OFFERS, { offers: data.offers, peerId: existing_peer.id });
     });
 
-    socket.on(ANSWERS, (answers, peerId) => {
+    socket.on(ANSWERS, (data) => {
+      // offer sent to  new peer,it sends an answer , receive answer from new peer and broadcast it to every other peer
       console.log('got an answer');
+      const new_peer = socket;
+      new_peer
+        .to(data.peerId)
+        .emit(ANSWERS, { answers: data.answers, peerId: new_peer.id });
 
-      socket.to(peerId).emit(ANSWERS, { answers, peerId });
+      // socket.t(peerId).emit(ANSWERS, { answers, peerId });
     });
 
-    socket.on(CANDIDATES, (candidates, peerId) => {
+    socket.on(CANDIDATES, (data) => {
+      // if  candidates from any other peers and send it to new peer,
+      //if ice candidate is sent from new peer should brodcast it to all peers
       console.log('got ice candidates');
+      //what ever pper id is received is either the existing peer or the new peer has botha can call the icecandidates
+      socket.to(data.peerId).emit(CANDIDATES, {
+        candidates: data.candidates,
+        peerId: socket.id,
+      });
 
-      socket.to(peerId).emit(CANDIDATES, { candidates, peerId });
+      // socket.to(peerId).emit(CANDIDATES, { candidates, peerId });
     });
 
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);
-      const peerId = peers.get(socket.id);
 
-      io.emit(PEER_DISCONNECTED, peerId);
+      io.emit(PEER_DISCONNECTED, socket.id);
       peers.delete(socket.id);
       // Check if all users are disconnected
       if (io.engine.clientsCount === 0) {
