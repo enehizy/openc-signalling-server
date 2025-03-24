@@ -11,7 +11,7 @@ const options = {
   key: fs.readFileSync('./cert/cert.key'),
   cert: fs.readFileSync('./cert/cert.crt'),
 };
-const server = https.createServer(options, app);
+const server = https.createServer(options, app) as any;
 ws(server);
 
 app.use(

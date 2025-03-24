@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { v4 } from 'uuid';
+
 const connectSocket = (httpsServer: any) => {
   const io = new Server(httpsServer, {
     cors: {
@@ -10,15 +10,15 @@ const connectSocket = (httpsServer: any) => {
 
   //event triggers
   const CANDIDATES = 'icecandidates';
-  const ID = 'id';
+
   const OFFERS = 'offers';
   const ANSWERS = 'answers';
   const JOIN = 'join';
   const NEW_PEER = 'newpeer';
-  const FIRST_PEERS = 'firstpeers';
+
   const PEER_DISCONNECTED = 'peerdisconnected';
   const peers = new Set();
-  let first_peer_id;
+
   io.on('connection', (socket) => {
     console.log('connecting to socket');
 
@@ -34,6 +34,7 @@ const connectSocket = (httpsServer: any) => {
       console.log('joining');
       const new_peer_id = socket.id;
       peers.add(new_peer_id);
+      io.to(new_peer_id).emit('id', new_peer_id);
       socket.broadcast.emit(NEW_PEER, new_peer_id);
 
       // const id = v4();
@@ -53,6 +54,7 @@ const connectSocket = (httpsServer: any) => {
 
     socket.on(OFFERS, (data) => {
       console.log('got and offer');
+
       // should recieve an offer from any existing peer and forward it to the new peer with its id
       const existing_peer = socket;
       // console.log({ offers });
@@ -87,7 +89,15 @@ const connectSocket = (httpsServer: any) => {
 
       // socket.to(peerId).emit(CANDIDATES, { candidates, peerId });
     });
-
+    socket.on(PEER_DISCONNECTED, () => {
+      socket.disconnect();
+    });
+    socket.on('muted', ({ peerId, muted }) => {
+      socket.broadcast.emit('muted', { peerId, muted });
+    });
+    socket.on('video-off', ({ peerId, videoOff }) => {
+      socket.broadcast.emit('video-off', { peerId, videoOff });
+    });
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);
 
