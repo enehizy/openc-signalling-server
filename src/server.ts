@@ -32,7 +32,6 @@ app.get('/', (_: Request, res: Response) => {
   res.sendFile(join(__dirname, '../public/index.html'));
 });
 
-const HOST = '0.0.0.0';
-server.listen(port, HOST as any, () => {
+server.listen(port, () => {
   console.log(`server running at ${server.address()?.address} ${port}`);
 });
