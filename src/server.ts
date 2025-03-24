@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import http from 'http';
 import cors from 'cors';
-import Turn from 'node-turn';
+
 import ws from './sockets.js';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -10,15 +10,6 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
-
-const turnServer = new Turn({
-  authMech: 'long-term',
-  listeningIps: ['0.0.0.0'],
-  credentials: { testuser: 'testpass' },
-  listeningPort: 3478,
-  debugLevel: 'ALL',
-});
-turnServer.start();
 
 // const options = {
 //   key: fs.readFileSync('./cert/cert.key'),

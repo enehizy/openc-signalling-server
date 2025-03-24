@@ -41,10 +41,10 @@ console.log('hostname', hostname);
 const iceServers = [
   { urls: 'stun:stun.l.google.com:19302' },
   {
-    urls: `turn:${hostname}:3478`, // Your TURN server
-    username: 'testuser', // From Coturn config
-    credential: 'testpass', // From Coturn config
-  }, // Public STUN server
+    urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
+    credential: 'webrtc',
+    username: 'webrtc',
+  },
 ];
 const createPeer = (peerId: string) => {
   let newPeer: RTCPeerConnection;

@@ -25,7 +25,6 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "node-turn": "^0.0.6",
     "socket.io": "^4.8.1",
     "uuid": "^11.1.0"
   }
