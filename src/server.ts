@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { v4 } from 'uuid';
 import https from 'https';
 import fs from 'fs';
 import cors from 'cors';
@@ -27,11 +26,6 @@ const port = process.env.PORT || 3005;
 app.get('/', (_: Request, res: Response) => {
   res.status(200).send();
   res.end();
-});
-
-app.get('/create-room', (_, res: Response) => {
-  const uuid = v4();
-  res.status(200).send({ roomId: uuid }).json();
 });
 
 const HOST = '0.0.0.0';
