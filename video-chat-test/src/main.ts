@@ -16,9 +16,14 @@ export let userMedia: MediaStream;
 
 export const getUserAudioOnly = async () => {
   console.log('clicked');
+  if (!navigator.mediaDevices) {
+    console.log('this browser does not support getting usr media');
+    return;
+  }
   userMedia = await navigator.mediaDevices.getUserMedia({
     audio: true,
   });
+  console.log('user media', userMedia);
 
   // }
 
