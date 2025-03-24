@@ -75,7 +75,9 @@ const createPeer = (peerId: string) => {
       currentVideoElement.playsInline = true;
       currentVideoElement.srcObject = stream;
 
-      currentVideoElement.play();
+      currentVideoElement
+        .play()
+        .catch((err) => console.error('Play failed:', err));
       return; // Skip if video element already exists for this peer
     }
 
