@@ -38,7 +38,12 @@ export const getUserAudioOnly = async () => {
 };
 
 const iceServers = [
-  { urls: 'stun:stun.l.google.com:19302' }, // Public STUN server
+  { urls: 'stun:stun.l.google.com:19302' },
+  {
+    urls: `turn:${location.href}:3478`, // Your TURN server
+    username: 'testuser', // From Coturn config
+    credential: 'testpass', // From Coturn config
+  }, // Public STUN server
 ];
 const createPeer = (peerId: string) => {
   let newPeer: RTCPeerConnection;
