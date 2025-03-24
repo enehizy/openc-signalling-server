@@ -23,9 +23,10 @@ export const getUserAudioOnly = async () => {
   // }
 
   localVideo.autoplay = true;
-  localVideo.poster = '/poster.svg';
+
   localVideo.muted = true;
   localVideo.srcObject = userMedia;
+  localVideo.poster = '/poster.svg';
   // localVideo.srcObject.getVideoTracks().forEach((track)=> track.)
   number_of_video_elements += 1;
   socket.emit(JOIN, '');
@@ -75,11 +76,11 @@ const createPeer = (peerId: string) => {
     remoteVideo.id = `video-${peerId}`;
     remoteVideo.autoplay = true;
     remoteVideo.muted = true;
-    remoteVideo.poster = '/poster.svg';
+
     remoteVideo.playsInline = true;
 
     remoteVideo.srcObject = stream;
-
+    remoteVideo.poster = '/poster.svg';
     document.documentElement.style.setProperty(
       '--grid-col-number',
       `${number_of_video_elements < 3 ? number_of_video_elements : 3}`

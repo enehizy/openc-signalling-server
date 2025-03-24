@@ -2,8 +2,13 @@ import express, { Request, Response } from 'express';
 import https from 'https';
 import fs from 'fs';
 import cors from 'cors';
-import ws from './sockets';
+import ws from './sockets.js';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
+// Get __dirname equivalent in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const app = express();
 
 const options = {
@@ -19,13 +24,12 @@ app.use(
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
-  express.static('public')
+  express.static(join(__dirname, '../public'))
 );
 const port = process.env.PORT || 3005;
 
 app.get('/', (_: Request, res: Response) => {
-  res.status(200).send();
-  res.end();
+  res.sendFile(join(__dirname, '../public/index.html'));
 });
 
 const HOST = '0.0.0.0';

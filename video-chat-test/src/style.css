@@ -1,32 +1,28 @@
-@import "tailwindcss";
-:root{
- --grid-col-number:1;
- --grid-cols:repeat(var(--grid-col-number), minmax(0, 1fr));
-
+@import 'tailwindcss';
+:root {
+  --grid-col-number: 1;
+  --grid-cols: repeat(var(--grid-col-number), minmax(0, 1fr));
 }
-@theme{
- --color-active-purple:#8871E6;
+@theme {
+  --color-active-purple: #8871e6;
   --color-audio-active: #ffba3a;
-  --color-active-video:#39a539;
-  
-
+  --color-active-video: #39a539;
 }
-@layer components{
-
-button{
-  @apply flex justify-center items-center flex-col gap-2;
-}
-p{
-  @apply text-gray-600;
-}
-/* .icon-bg{
+@layer components {
+  button {
+    @apply flex justify-center items-center flex-col gap-2;
+  }
+  p {
+    @apply text-gray-600;
+  }
+  /* .icon-bg{
  @apply bg-blue-700 p-2 rounded-full ;
 } */
-/* #localVideo{
+  /* #localVideo{
   @apply bg-gray-50;
 } */
-video{
-  /* color:#39a539; */
-  @apply bg-gray-50 place-items-center    w-full h-full max-h-[400px] md:max-h-[600px] 2xl:max-h-[750px] object-cover rounded-2xl ;
-}
+  video {
+    /* color:#39a539; */
+    @apply bg-gray-50 place-items-center    w-full h-full max-h-[400px] md:max-h-[600px] 2xl:max-h-[750px] object-cover rounded-2xl;
+  }
 }

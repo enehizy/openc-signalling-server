@@ -23,21 +23,15 @@
      
         <main  class="grid gap-2 justify-center items-center grid-cols-1 md:grid-cols-[var(--grid-cols)] bg-gray-200      w-full h-full     px-6 py-4" id="video-grid">
    
-          <video    id="localVideo" autoplay playsinline poster="/poster.png"></video>
+          <video    id="localVideo" autoplay playsinline poster="/poster.svg"></video>
           
          
         
         </main>
 
-        <div id="rejoin" class="hidden  gap-7 justify-center items-center flex-col p-12">
-          <h1 class="text-5xl font-semibold">You ended the call</h1>
-          <p class="text-active-purple text-center">Refresh the page to rejoin the call or click the rejoin button below</p>
-          <button id="rejoinBtn" class="bg-blue-600 text-white px-5 py-2 rounded-full">Rejoin call</button>
-          <audio id="end-sound" class="hidden" src="/end-call-audio.mp3">
-         
-        </div>
+      
   
-  <footer class="flex justify-center item-center gap-10 py-5">
+  <footer class="flex absolute w-full justify-center item-center gap-10 py-5">
    
     <!-- <button id="share-screen" class="icon-bg">
       <svg class="fill-active-purple" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +83,13 @@
      
   </footer>
           
- 
+  <div id="rejoin" class="hidden  gap-7 justify-center items-center flex-col p-12">
+    <h1 class="text-5xl font-semibold">You ended the call</h1>
+    <p class="text-active-purple text-center">Refresh the page to rejoin the call or click the rejoin button below</p>
+    <button id="rejoinBtn" class="bg-blue-600 text-white px-5 py-2 rounded-full">Rejoin call</button>
+    <audio id="end-sound" class="hidden" src="/end-call-audio.mp3">
+   
+  </div>
     <!-- <script type="module" src="/src/sockets.ts"></script> -->
     <script type="module" src="/src/main.ts"></script>
     <script type="module" src="/src/video-buttons.ts"></script>

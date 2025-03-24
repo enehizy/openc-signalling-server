@@ -29,7 +29,7 @@ const connectSocket = (httpsServer: any) => {
     //   return;
     // }
 
-    socket.on(JOIN, (data) => {
+    socket.on(JOIN, () => {
       // should brodcast new peer message with peer id of new peer to every peer
       console.log('joining');
       const new_peer_id = socket.id;
