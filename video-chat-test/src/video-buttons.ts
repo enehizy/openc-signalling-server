@@ -19,17 +19,18 @@ socket.on('video-off', ({ videoOff: isVideoOff, peerId }) => {
   const remoteVideo = document.getElementById(
     `video-${peerId}`
   ) as HTMLVideoElement;
-  const remoteStream = remoteVideo.srcObject as MediaStream;
-  const videoTracks = remoteStream.getVideoTracks();
-
-  if (isVideoOff) {
-    videoTracks.forEach((track) => {
-      track.stop();
-      remoteStream.removeTrack(track);
-    });
-    remoteVideo.srcObject = remoteStream;
-    remoteVideo.play();
-    return;
+  if (remoteVideo) {
+    if (isVideoOff) {
+      const remoteStream = remoteVideo.srcObject as MediaStream;
+      const videoTracks = remoteStream.getVideoTracks();
+      videoTracks.forEach((track) => {
+        track.stop();
+        remoteStream.removeTrack(track);
+      });
+      remoteVideo.srcObject = remoteStream;
+      remoteVideo.play();
+      return;
+    }
   }
 });
 
