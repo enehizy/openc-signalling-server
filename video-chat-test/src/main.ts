@@ -23,7 +23,7 @@ export const getUserAudioOnly = async () => {
   // }
 
   localVideo.autoplay = true;
-
+  localVideo.playsInline = true;
   localVideo.muted = true;
   localVideo.srcObject = userMedia;
   localVideo.poster = '/poster.svg';
@@ -66,7 +66,10 @@ const createPeer = (peerId: string) => {
     const stream = e.streams[0];
 
     if (currentVideoElement) {
+      currentVideoElement.autoplay = true;
+      currentVideoElement.playsInline = true;
       currentVideoElement.srcObject = stream;
+
       currentVideoElement.play();
       return; // Skip if video element already exists for this peer
     }
