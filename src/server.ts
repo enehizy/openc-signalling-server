@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import https from 'https';
+import http from 'http';
 import fs from 'fs';
 import cors from 'cors';
 import ws from './sockets.js';
@@ -11,11 +11,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
 
-const options = {
-  key: fs.readFileSync('./cert/cert.key'),
-  cert: fs.readFileSync('./cert/cert.crt'),
-};
-const server = https.createServer(options, app) as any;
+// const options = {
+//   key: fs.readFileSync('./cert/cert.key'),
+//   cert: fs.readFileSync('./cert/cert.crt'),
+// };
+const server = http.createServer(app) as any;
 ws(server);
 
 app.use(
