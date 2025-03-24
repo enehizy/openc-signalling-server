@@ -13,6 +13,7 @@ const app = express();
 
 const turnServer = new Turn({
   authMech: 'long-term',
+  listeningIps: ['0.0.0.0'],
   credentials: { testuser: 'testpass' },
   listeningPort: 3478,
   debugLevel: 'ALL',
