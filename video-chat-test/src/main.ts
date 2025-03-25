@@ -41,9 +41,9 @@ console.log('hostname', hostname);
 const iceServers = [
   { urls: 'stun:stun.l.google.com:19302' },
   {
-    urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
-    credential: 'webrtc',
-    username: 'webrtc',
+    urls: 'relay1.expressturn.com:3478',
+    credential: 'efFO9YFJ30BK11FWI6',
+    username: 'U4VbTHpVOqFgYk21',
   },
 ];
 const createPeer = (peerId: string) => {
