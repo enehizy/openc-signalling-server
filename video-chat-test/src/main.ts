@@ -42,8 +42,8 @@ const iceServers = [
   { urls: 'stun:stun.l.google.com:19302' },
   {
     urls: 'relay1.expressturn.com:3478',
-    credential: 'efFO9YFJ30BK11FWI6',
-    username: 'U4VbTHpVOqFgYk21',
+    username: 'efFO9YFJ30BK11FWI6',
+    credential: 'U4VbTHpVOqFgYk21',
   },
 ];
 const createPeer = (peerId: string) => {
