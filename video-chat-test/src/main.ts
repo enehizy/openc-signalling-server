@@ -139,6 +139,9 @@ const createPeer = (peerId: string) => {
     figure.appendChild(remoteVideo);
 
     if (number_of_video_elements >= 1) {
+      const arrows = document.getElementById('arrows') as HTMLDivElement;
+      arrows.classList.remove('md:hidden');
+      arrows.classList.add('md:flex');
       waiting.classList.add('hidden');
     }
     peerVideoFeeds.appendChild(figure);
@@ -281,6 +284,9 @@ socket.on(PEER_DISCONNECTED, async (peerId) => {
   number_of_video_elements -= 1;
   numberOfParticipants.textContent = `${number_of_video_elements}`;
   if (number_of_video_elements <= 1) {
+    const arrows = document.getElementById('arrows') as HTMLDivElement;
+    arrows.classList.remove('md:flex');
+    arrows.classList.add('md:hidden');
     waiting.classList.remove('hidden');
   }
   //   document.documentElement.style.setProperty(

@@ -1,8 +1,9 @@
 import express, { Request, Response } from 'express';
 import http from 'http';
 // import fs from 'fs';
-import cors from 'cors';
 // import https from 'https';
+import cors from 'cors';
+
 import ws from './sockets.js';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
