@@ -1,28 +1,67 @@
 @import 'tailwindcss';
-:root {
-  --grid-col-number: 1;
-  --grid-cols: repeat(var(--grid-col-number), minmax(0, 1fr));
-}
 @theme {
-  --color-active-purple: #8871e6;
-  --color-audio-active: #ffba3a;
-  --color-active-video: #39a539;
+  --color-body: #0d0d0d;
+  --color-light: #333333;
+  --color-mobile-light: rgba(92, 92, 92, 1);
+  --color-modal-overlay: rgba(98, 98, 98, 0.88);
+  --color-input: #eeeeee;
+  --color-button: #4147d5;
 }
 @layer components {
-  button {
-    @apply flex justify-center items-center flex-col gap-2;
+  .margin-0-auto {
+    margin: 0 auto;
   }
-  p {
-    @apply text-gray-600;
+}
+body {
+  background-color: var(--color-body);
+  overflow: hidden;
+}
+
+footer > div > button {
+  @apply flex-col flex justify-center items-center   md:gap-2;
+}
+footer > div > button > p {
+  @apply text-center text-white/40;
+}
+video {
+  @apply aspect-video;
+  object-fit: cover;
+}
+.peer-video-off-label {
+  @apply text-white w-screen md:w-auto py-24 md:p-20 md:aspect-video capitalize text-center md:bg-light bg-mobile-light text-xl md:text-3xl;
+}
+figure {
+  @apply md:h-[150px];
+
+  aspect-ratio: 16/9;
+}
+#peer-video-feeds {
+  scrollbar-width: none;
+  :-webkit-scrollbar {
+    display: none;
   }
-  /* .icon-bg{
- @apply bg-blue-700 p-2 rounded-full ;
+}
+.fig-caption {
+  @apply text-white absolute text-left bg-modal-overlay bottom-0 w-full pl-5 pr-10 capitalize;
+}
+
+/* figure > video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9; 
 } */
-  /* #localVideo{
-  @apply bg-gray-50;
+/* .icon {
+  @apply w-6 h-6 md:w-auto md:h-auto;
 } */
-  video {
-    /* color:#39a539; */
-    @apply bg-gray-50 place-items-center    w-full h-full max-h-[400px] md:max-h-[600px] 2xl:max-h-[750px] object-cover rounded-2xl;
+#spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

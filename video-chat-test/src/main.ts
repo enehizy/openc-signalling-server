@@ -9,13 +9,20 @@ const JOIN = 'join';
 const NEW_PEER = 'newpeer';
 export const PEER_DISCONNECTED = 'peerdisconnected';
 let number_of_video_elements = 1;
-const videoGrid = document.getElementById('video-grid') as HTMLVideoElement;
+const peerVideoFeeds = document.getElementById(
+  'peer-video-feeds'
+) as HTMLDivElement;
+const MyDisplayName = document.getElementById(
+  'display-name'
+) as HTMLHeadingElement;
+const waiting = document.getElementById('waiting') as HTMLDivElement;
 const localVideo = document.getElementById('localVideo') as HTMLVideoElement;
-
+const numberOfParticipants = document.getElementById(
+  'number-of-particioants'
+) as HTMLParagraphElement;
 export let userMedia: MediaStream;
 
 export const getUserAudioOnly = async () => {
-  console.log('clicked');
   if (!navigator.mediaDevices) {
     console.log('this browser does not support getting usr media');
     return;
@@ -31,9 +38,10 @@ export const getUserAudioOnly = async () => {
   localVideo.playsInline = true;
   localVideo.muted = true;
   localVideo.srcObject = userMedia;
-  localVideo.poster = '/poster.svg';
+
   // localVideo.srcObject.getVideoTracks().forEach((track)=> track.)
-  number_of_video_elements += 1;
+  // number_of_video_elements += 1;
+
   socket.emit(JOIN, '');
 };
 const hostname = location.hostname;
@@ -72,39 +80,82 @@ const createPeer = (peerId: string) => {
     const currentVideoElement = document.getElementById(
       `video-${peerId}`
     ) as HTMLVideoElement;
-
-    const remoteVideo = document.createElement('video');
+    const currentFigureElement = document.getElementById(
+      `figure-${peerId}`
+    ) as HTMLDivElement;
+    const currentLabelElement = document.getElementById(
+      `label-${peerId}`
+    ) as HTMLHeadingElement;
+    const figcaption = document.createElement('figcaption');
     const stream = e.streams[0];
 
     if (currentVideoElement) {
+      //  only when video is on
+      figcaption.innerText = `peer ${peerId}`.substring(0, 8);
+      currentFigureElement.classList.add('relative');
+      figcaption.classList.add('fig-caption');
+      currentFigureElement.appendChild(figcaption);
+      //normal video settingd
+
       currentVideoElement.autoplay = true;
       currentVideoElement.playsInline = true;
       currentVideoElement.srcObject = stream;
-      currentVideoElement.muted = false;
+      currentVideoElement.classList.remove('invisible');
+      currentFigureElement.classList.remove('invisible', 'absolute');
+      currentLabelElement.classList.add('hidden');
+      currentVideoElement.muted = true;
       currentVideoElement
         .play()
         .catch((err) => console.error('Play failed:', err));
       return; // Skip if video element already exists for this peer
     }
+    const figure = document.createElement('figure');
+    const remoteVideo = document.createElement('video');
+    const label = document.createElement('h1');
+    label.id = `label-${peerId}`;
+    figure.id = `figure-${peerId}`;
+    //    when video is off, show label
+    peerVideoFeeds.classList.add('relative');
+    label.innerText = `peer ${peerId}`.substring(0, 8);
 
-    console.log('tracks from event', stream);
-    remoteVideo.className = 'video';
+    label.classList.add('peer-video-off-label');
+    peerVideoFeeds.appendChild(label);
+    figure.classList.add('invisible', 'absolute');
+    //these video settings apply whether video is on or off
     remoteVideo.id = `video-${peerId}`;
-    remoteVideo.autoplay = true;
     remoteVideo.muted = true;
-
+    remoteVideo.controls = false;
     remoteVideo.playsInline = true;
-
+    remoteVideo.autoplay = true;
     remoteVideo.srcObject = stream;
-    remoteVideo.poster = '/poster.svg';
-    document.documentElement.style.setProperty(
-      '--grid-col-number',
-      `${number_of_video_elements < 3 ? number_of_video_elements : 3}`
-    );
+    figure.appendChild(remoteVideo);
 
-    videoGrid?.appendChild(remoteVideo);
+    if (number_of_video_elements >= 1) {
+      waiting.classList.add('hidden');
+    }
+    peerVideoFeeds.appendChild(figure);
     number_of_video_elements += 1;
+    numberOfParticipants.textContent = `${number_of_video_elements}`;
     remoteVideo.play().catch((err) => console.error('Play failed:', err));
+    //new video setting end here
+    // console.log('tracks from event', stream);
+    // remoteVideo.className = 'video';
+    // remoteVideo.id = `video-${peerId}`;
+    // remoteVideo.autoplay = true;
+    // remoteVideo.muted = true;
+
+    // remoteVideo.playsInline = true;
+
+    // remoteVideo.srcObject = stream;
+    // remoteVideo.poster = '/poster.svg';
+    // document.documentElement.style.setProperty(
+    //   '--grid-col-number',
+    //   `${number_of_video_elements < 3 ? number_of_video_elements : 3}`
+    // );
+
+    // videoGrid?.appendChild(remoteVideo);
+    // number_of_video_elements += 1;
+    // remoteVideo.play().catch((err) => console.error('Play failed:', err));
   });
 
   return newPeer;
@@ -120,9 +171,11 @@ export const renegotaition = async () => {
     video: true,
     audio: true,
   });
+  MyDisplayName.classList.add('hidden');
   localVideo.srcObject = userMedia;
+  localVideo.classList.remove('invisible');
   // videoToggleButton.classList.remove('opacity-30')
-
+  localVideo.muted = true;
   localVideo.play();
 
   for (const [peerId, peerConnection] of connections) {
@@ -207,15 +260,24 @@ socket.on(PEER_DISCONNECTED, async (peerId) => {
   const videoElement = document.getElementById(
     `video-${peerId}`
   ) as HTMLVideoElement;
+  const currentLabelElement = document.getElementById(
+    `label-${peerId}`
+  ) as HTMLHeadingElement;
   const stream = videoElement.srcObject as MediaStream;
   stream.getTracks().forEach((track) => track.stop());
-  videoElement.parentNode?.removeChild(videoElement);
-  number_of_video_elements -= 1;
+  peerVideoFeeds.removeChild(currentLabelElement);
+  peerVideoFeeds.removeChild(videoElement.parentElement!);
 
-  document.documentElement.style.setProperty(
-    '--grid-col-number',
-    `${number_of_video_elements - 1}`
-  );
+  //   videoElement.parentNode?.removeChild(videoElement);
+  number_of_video_elements -= 1;
+  numberOfParticipants.textContent = `${number_of_video_elements}`;
+  if (number_of_video_elements <= 1) {
+    waiting.classList.remove('hidden');
+  }
+  //   document.documentElement.style.setProperty(
+  //     '--grid-col-number',
+  //     `${number_of_video_elements - 1}`
+  //   );
   connections.get(peerId)?.close();
   connections.delete(peerId);
 });
