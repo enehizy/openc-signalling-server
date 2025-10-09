@@ -87,6 +87,8 @@ const createPeer = (peerId: string) => {
       `label-${peerId}`
     ) as HTMLHeadingElement;
     const figcaption = document.createElement('figcaption');
+    figcaption.id = `figcaption-${peerId}`;
+
     const stream = e.streams[0];
 
     if (currentVideoElement) {
@@ -103,6 +105,7 @@ const createPeer = (peerId: string) => {
       currentVideoElement.classList.remove('invisible');
       currentFigureElement.classList.remove('invisible', 'absolute');
       currentLabelElement.classList.add('hidden');
+      currentLabelElement.classList.remove('caption');
       currentVideoElement.muted = true;
       currentVideoElement
         .play()
@@ -113,11 +116,16 @@ const createPeer = (peerId: string) => {
     const remoteVideo = document.createElement('video');
     const label = document.createElement('h1');
     label.id = `label-${peerId}`;
+
     figure.id = `figure-${peerId}`;
     //    when video is off, show label
     peerVideoFeeds.classList.add('relative');
     label.innerText = `peer ${peerId}`.substring(0, 8);
-
+    const mic_muted = document.createElement('img') as HTMLImageElement;
+    mic_muted.src = '/mic-muted.svg';
+    mic_muted.id = `mic-muted-${peerId}`;
+    mic_muted.classList.add('margin-0-auto');
+    label.appendChild(mic_muted);
     label.classList.add('peer-video-off-label');
     peerVideoFeeds.appendChild(label);
     figure.classList.add('invisible', 'absolute');

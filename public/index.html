@@ -4,125 +4,148 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>osas video call app</title>
-    <script type="module" crossorigin src="/assets/index-D_Jkz6zM.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-ZEMvV3t_.css">
+    <script type="module" crossorigin src="/assets/index-BiKRpfm-.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CnYnJx2S.css">
   </head>
 
-  <body class="flex flex-col gap-y-2 justify-center items-center h-screen">
-    <main
-      class="flex flex-col px-4 py-2 bg-light md:bg-transparent h-[600px] md:h-auto overflow-scroll md:overflow-visible"
+  <body>
+    <section
+      id="main"
+      class="flex flex-col gap-y-2 justify-center items-center h-screen"
     >
-      <!-- show arrows with md:flex -->
-      <div
-        id="arrows"
-        class="absolute max-w-[1200px] w-full translate-y-20 hidden"
+      <main
+        class="flex flex-col px-4 py-2 bg-light md:bg-transparent h-[600px] md:h-auto overflow-scroll md:overflow-visible"
       >
-        <button id="arrow-left" class="-translate-x-10">
-          <img src="/arrow-left.svg" />
-        </button>
-        <div class="flex-1"></div>
-        <button id="arrow-right" class="translate-x-10">
-          <img src="/arrow-right.svg" />
-        </button>
-      </div>
-
-      <div
-        id="peer-video-feeds"
-        class="order-2 md:pt-5 md:order-1 flex flex-col md:flex-row items-center gap-2 md:gap-4 max-w-[1200px] md:overflow-x-auto"
-      >
+        <!-- show arrows with md:flex -->
         <div
-          id="waiting"
-          class="flex gap-x-1 justify-center items-center w-full bg-mobile-light md:bg-light md:p-12 h-[250px] md:h-auto"
+          id="arrows"
+          class="absolute max-w-[1200px] w-full translate-y-20 hidden"
         >
-          <p class="text-white">waiting for someone to connect</p>
-          <svg
-            id="spinner"
-            width="24"
-            height="25"
-            viewBox="0 0 24 25"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              opacity="0.5"
-              d="M12 2.5C10.0222 2.5 8.08879 3.08649 6.44429 4.1853C4.7998 5.28412 3.51808 6.8459 2.7612 8.67317C2.00433 10.5004 1.80629 12.5111 2.19214 14.4509C2.578 16.3907 3.5304 18.1725 4.92893 19.5711C6.32745 20.9696 8.10928 21.922 10.0491 22.3079C11.9889 22.6937 13.9996 22.4957 15.8268 21.7388C17.6541 20.9819 19.2159 19.7002 20.3147 18.0557C21.4135 16.4112 22 14.4778 22 12.5C22 11.1868 21.7413 9.88642 21.2388 8.67317C20.7362 7.45991 19.9996 6.35752 19.0711 5.42893C18.1425 4.50035 17.0401 3.76375 15.8268 3.2612C14.6136 2.75866 13.3132 2.5 12 2.5ZM12 20.5C10.4177 20.5 8.87103 20.0308 7.55543 19.1518C6.23984 18.2727 5.21446 17.0233 4.60896 15.5615C4.00346 14.0997 3.84503 12.4911 4.15371 10.9393C4.4624 9.38743 5.22432 7.96197 6.34314 6.84315C7.46196 5.72433 8.88743 4.9624 10.4393 4.65372C11.9911 4.34504 13.5997 4.50346 15.0615 5.10896C16.5233 5.71447 17.7727 6.73984 18.6518 8.05544C19.5308 9.37103 20 10.9177 20 12.5C20 14.6217 19.1571 16.6566 17.6569 18.1569C16.1566 19.6571 14.1217 20.5 12 20.5Z"
-              fill="white"
-            />
-            <path
-              d="M20 12.5H22C22 11.1868 21.7413 9.88642 21.2388 8.67317C20.7362 7.45991 19.9997 6.35752 19.0711 5.42893C18.1425 4.50035 17.0401 3.76375 15.8268 3.2612C14.6136 2.75866 13.3132 2.5 12 2.5V4.5C14.1217 4.5 16.1566 5.34285 17.6569 6.84315C19.1571 8.34344 20 10.3783 20 12.5Z"
-              fill="white"
-            />
-          </svg>
+          <button id="arrow-left" class="-translate-x-10">
+            <img src="/arrow-left.svg" />
+          </button>
+          <div class="flex-1"></div>
+          <button id="arrow-right" class="translate-x-10">
+            <img src="/arrow-right.svg" />
+          </button>
         </div>
-        <!-- <video
+
+        <div
+          id="peer-video-feeds"
+          class="order-2 md:pt-5 md:order-1 flex flex-col md:flex-row items-center gap-2 md:gap-4 max-w-[1200px] md:overflow-x-auto"
+        >
+          <div
+            id="waiting"
+            class="flex gap-x-1 justify-center items-center w-full bg-mobile-light md:bg-light md:p-12 h-[250px] md:h-auto"
+          >
+            <p class="text-white">waiting for someone to connect</p>
+            <svg
+              id="spinner"
+              width="24"
+              height="25"
+              viewBox="0 0 24 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                opacity="0.5"
+                d="M12 2.5C10.0222 2.5 8.08879 3.08649 6.44429 4.1853C4.7998 5.28412 3.51808 6.8459 2.7612 8.67317C2.00433 10.5004 1.80629 12.5111 2.19214 14.4509C2.578 16.3907 3.5304 18.1725 4.92893 19.5711C6.32745 20.9696 8.10928 21.922 10.0491 22.3079C11.9889 22.6937 13.9996 22.4957 15.8268 21.7388C17.6541 20.9819 19.2159 19.7002 20.3147 18.0557C21.4135 16.4112 22 14.4778 22 12.5C22 11.1868 21.7413 9.88642 21.2388 8.67317C20.7362 7.45991 19.9996 6.35752 19.0711 5.42893C18.1425 4.50035 17.0401 3.76375 15.8268 3.2612C14.6136 2.75866 13.3132 2.5 12 2.5ZM12 20.5C10.4177 20.5 8.87103 20.0308 7.55543 19.1518C6.23984 18.2727 5.21446 17.0233 4.60896 15.5615C4.00346 14.0997 3.84503 12.4911 4.15371 10.9393C4.4624 9.38743 5.22432 7.96197 6.34314 6.84315C7.46196 5.72433 8.88743 4.9624 10.4393 4.65372C11.9911 4.34504 13.5997 4.50346 15.0615 5.10896C16.5233 5.71447 17.7727 6.73984 18.6518 8.05544C19.5308 9.37103 20 10.9177 20 12.5C20 14.6217 19.1571 16.6566 17.6569 18.1569C16.1566 19.6571 14.1217 20.5 12 20.5Z"
+                fill="white"
+              />
+              <path
+                d="M20 12.5H22C22 11.1868 21.7413 9.88642 21.2388 8.67317C20.7362 7.45991 19.9997 6.35752 19.0711 5.42893C18.1425 4.50035 17.0401 3.76375 15.8268 3.2612C14.6136 2.75866 13.3132 2.5 12 2.5V4.5C14.1217 4.5 16.1566 5.34285 17.6569 6.84315C19.1571 8.34344 20 10.3783 20 12.5Z"
+                fill="white"
+              />
+            </svg>
+          </div>
+          <!-- <video
           class="aspect-video w-[300px]"
           src="/video-call.mp4"
           autoplay
           playsinline
           muted
         ></video>  -->
-      </div>
+        </div>
 
-      <div
-        id="my-video-feed"
-        class="relative order-1 md:order-2 w-full my-3 bg-mobile-light md:bg-light md:w-[1200px] margin-0-auto py-5 flex justify-center items-center"
-      >
-        <h1
-          id="display-name"
-          class="absolute text-white text-center capitalize text-xl md:text-3xl"
+        <div
+          id="my-video-feed"
+          class="relative order-1 md:order-2 w-full my-3 bg-mobile-light md:bg-light md:w-[1200px] margin-0-auto py-5 flex justify-center items-center"
         >
-          Not connected
-        </h1>
-        <video
-          id="localVideo"
-          class="md:w-[850px] w-[300px] md:margin-0-auto invisible"
-          src="/video-call.mp4"
-          muted
-          autoplay
-          playsinline
-        ></video>
+          <h1
+            id="display-name"
+            class="absolute text-white text-center capitalize text-xl md:text-3xl"
+          >
+            Not connected
+          </h1>
+          <video
+            id="localVideo"
+            class="md:w-[850px] w-[300px] md:margin-0-auto invisible"
+            src="/video-call.mp4"
+            muted
+            autoplay
+            playsinline
+          ></video>
+        </div>
+      </main>
+      <footer
+        class="flex justify-center fixed 2xl:bottom-0 bottom-8 md:relative"
+      >
+        <div class="bg-light flex gap-x-12 md:gap-x-16 p-2 md:px-14 rounded-xl">
+          <button>
+            <img class="icon" src="/users.svg" alt="number of participants" />
+            <p id="number-of-particioants">1</p>
+          </button>
+          <button id="audio-toggle">
+            <img class="icon" src="/sound-off.svg" alt="sound currently off" />
+            <p>Audio</p>
+          </button>
+          <button id="video-toggle">
+            <img class="icon" src="/video-off.svg" alt="video currently off" />
+            <p>Video</p>
+          </button>
+          <button id="end-call">
+            <img class="" src="/end-call.svg" alt="video currently off" />
+          </button>
+        </div>
+      </footer>
+      <div
+        id="overlay"
+        class="absolute inset-0 bg-modal-overlay flex justify-center"
+      >
+        <div
+          class="bg-white p-6 w-[500px] h-[200px] mt-20 rounded-2xl flex flex-col gap-2 justify-center"
+        >
+          <label class="font-bold block">Display Name</label>
+          <input
+            id="name-input"
+            class="block p-2 w-full bg-input rounded-full"
+            placeholder="what name would you like to be known as"
+          />
+          <button
+            id="join-btn"
+            class="bg-button p-1 px-4 text-white rounded-full"
+          >
+            Join
+          </button>
+        </div>
       </div>
-    </main>
-    <footer class="flex justify-center fixed 2xl:bottom-0 bottom-8 md:relative">
-      <div class="bg-light flex gap-x-12 md:gap-x-16 p-2 md:px-14 rounded-xl">
-        <button>
-          <img class="icon" src="/users.svg" alt="number of participants" />
-          <p id="number-of-particioants">1</p>
-        </button>
-        <button id="audio-toggle">
-          <img class="icon" src="/sound-off.svg" alt="sound currently off" />
-          <p>Audio</p>
-        </button>
-        <button id="video-toggle">
-          <img class="icon" src="/video-off.svg" alt="video currently off" />
-          <p>Video</p>
-        </button>
-        <button id="end-call">
-          <img class="" src="/end-call.svg" alt="video currently off" />
-        </button>
-      </div>
-    </footer>
-    <div
-      id="overlay"
-      class="absolute inset-0 bg-modal-overlay flex justify-center"
+    </section>
+    <section
+      id="rejoin"
+      class="hidden flex-col gap-4 md:gap-8 items-center pt-24 md:pt-32"
     >
-      <div
-        class="bg-white p-6 w-[500px] h-[200px] mt-20 rounded-2xl flex flex-col gap-2 justify-center"
+      <h1 class="text-white text-xl md:text-2xl">You just quit the app</h1>
+
+      <h2 class="text-white font-semibold text-2xl md:text-3xl">
+        Do you want to Rejoin?
+      </h2>
+      <button
+        id="rejoin-btn"
+        class="bg-button text-white p-2 px-4 rounded-full"
       >
-        <label class="font-bold block">Display Name</label>
-        <input
-          id="name-input"
-          class="block p-2 w-full bg-input rounded-full"
-          placeholder="what name would you like to be known as"
-        />
-        <button
-          id="join-btn"
-          class="bg-button p-1 px-4 text-white rounded-full"
-        >
-          Join
-        </button>
-      </div>
-    </div>
+        Rejoin
+      </button>
+    </section>
     <audio id="end-call-tone" class="hidden" src="/end-call-audio.mp3"></audio>
     <!-- <script>
       const peerVideoCont = document.getElementById('peer-video-feeds');

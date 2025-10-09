@@ -1,4 +1,10 @@
-import { id, renegotaition, userMedia } from './main';
+import {
+  id,
+  renegotaition,
+  userMedia,
+  connections,
+  PEER_DISCONNECTED,
+} from './main';
 import socket from './sockets';
 const videoToggleButton = document.getElementById('video-toggle');
 const videoToggleIcon = document.querySelector(
@@ -11,8 +17,8 @@ const audioToggleIcon = document.querySelector(
 const localVideo = document.getElementById('localVideo') as HTMLVideoElement;
 
 const endCallBtn = document.getElementById('end-call');
-// const rejoin = document.getElementById('rejoin');
-// const rejoinBtn = document.getElementById('rejoinBtn');
+
+const rejoinBtn = document.getElementById('rejoin-btn');
 let videoOff = true;
 let muted = true;
 
@@ -74,7 +80,28 @@ socket.on('muted', ({ peerId, muted: isMuted }) => {
   const videoElement = document.getElementById(
     `video-${peerId}`
   ) as HTMLVideoElement;
+  const currentLabelElement = document.getElementById(
+    `label-${peerId}`
+  ) as HTMLHeadingElement;
+  // const currentFigureElement = document.querySelector(
+  //   `#figure-${peerId}`
+  // ) as HTMLHeadingElement;
+  const currentMicMutedElement = document.getElementById(
+    `mic-muted-${peerId}`
+  ) as HTMLImageElement;
+  const mic_muted = document.createElement('img') as HTMLImageElement;
+  mic_muted.src = '/mic-muted.svg';
+  mic_muted.id = `mic-muted-${peerId}`;
+  mic_muted.classList.add('margin-0-auto');
+  // alert(`${peerId} has ${isMuted ? 'muted' : 'unmuted'} their mic`);
   videoElement.muted = isMuted;
+  if (isMuted) {
+    currentLabelElement.appendChild(mic_muted);
+    // currentFigureElement?.appendChild(mic_muted);
+    return;
+  }
+  currentLabelElement.removeChild(currentMicMutedElement);
+  // currentFigureElement?.removeChild(currentMicMutedElement);
 });
 audioToggleButton?.addEventListener('click', () => {
   muted = !muted;
@@ -89,32 +116,34 @@ audioToggleButton?.addEventListener('click', () => {
 });
 
 endCallBtn?.addEventListener('click', () => {
-  //   const videoGrid = document.getElementById('video-grid') as HTMLVideoElement;
-  //   const footer = document.querySelector('footer') as any;
   const endCallTone = document.getElementById(
     'end-call-tone'
   ) as HTMLAudioElement;
-  endCallTone.play();
-  //   socket.emit(PEER_DISCONNECTED);
-  //   videoGrid.remove();
-  //   footer.remove();
-  //   rejoin?.classList.remove('hidden');
-  //   rejoin?.classList.add('flex');
-  //   userMedia.getTracks().forEach((track) => {
-  //     track.stop();
-  //     userMedia.removeTrack(track);
-  //     endSound.play();
-  //   });
-  //   for (let [_, peer] of connections) {
-  //     peer.getSenders().forEach((sender) => {
-  //       sender.track?.stop();
-  //       peer.removeTrack(sender);
-  //     });
-  //     peer.close();
-  //   }
-  //   connections.clear();
+  const mainContainer = document.getElementById('main') as HTMLDivElement;
+  const rejoinContainer = document.getElementById('rejoin') as HTMLDivElement;
+
+  mainContainer.classList.add('hidden');
+  mainContainer.classList.remove('flex');
+  rejoinContainer.classList.remove('hidden');
+  rejoinContainer.classList.add('flex');
+
+  socket.emit(PEER_DISCONNECTED);
+
+  userMedia.getTracks().forEach((track) => {
+    track.stop();
+    userMedia.removeTrack(track);
+    endCallTone.play();
+  });
+  for (let [_, peer] of connections) {
+    peer.getSenders().forEach((sender) => {
+      sender.track?.stop();
+      peer.removeTrack(sender);
+    });
+    peer.close();
+  }
+  connections.clear();
 });
 
-// rejoinBtn?.addEventListener('click', () => {
-//   window.location.reload();
-// });
+rejoinBtn?.addEventListener('click', () => {
+  window.location.reload();
+});
