@@ -170,6 +170,7 @@ const createPeer = (peerId: string) => {
 };
 
 export let id: string;
+// const nameToId = new Map<string, string>();
 socket.on('id', (peerId) => {
   id = peerId;
 });
