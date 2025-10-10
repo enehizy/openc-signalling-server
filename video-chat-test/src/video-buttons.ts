@@ -20,7 +20,7 @@ const endCallBtn = document.getElementById('end-call');
 
 const rejoinBtn = document.getElementById('rejoin-btn');
 let videoOff = true;
-let muted = true;
+export let muted = true;
 
 socket.on('video-off', ({ videoOff: isVideoOff, peerId }) => {
   const remoteVideo = document.getElementById(

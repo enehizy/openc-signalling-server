@@ -1,5 +1,5 @@
 import socket from './sockets';
-
+import { muted } from './video-buttons';
 // const connections:{peerConnection:RTCPeerConnection,peerId?:string}[]=[];
 export const connections: Map<string, RTCPeerConnection> = new Map();
 const CANDIDATES = 'icecandidates';
@@ -187,7 +187,7 @@ export const renegotaition = async () => {
   localVideo.srcObject = userMedia;
   localVideo.classList.remove('invisible');
   // videoToggleButton.classList.remove('opacity-30')
-  localVideo.muted = true;
+  localVideo.muted = muted;
   localVideo.play();
 
   for (const [peerId, peerConnection] of connections) {
