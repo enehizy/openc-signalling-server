@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 @theme {
-  --color-body: #0d0d0d;
-  --color-light: #333333;
-  --color-mobile-light: rgba(92, 92, 92, 1);
+  --color-body: #121212;
+  --color-light: #282828;
+  --color-mobile-light: #3f3f3f;
   --color-modal-overlay: rgba(98, 98, 98, 0.88);
   --color-input: #eeeeee;
   --color-button: #4147d5;
