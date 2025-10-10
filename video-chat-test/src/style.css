@@ -28,7 +28,7 @@ video {
   object-fit: cover;
 }
 .peer-video-off-label {
-  @apply text-white w-screen md:w-auto py-24 md:p-20 md:aspect-video capitalize text-center md:bg-light bg-mobile-light text-xl md:text-3xl;
+  @apply text-white w-screen md:w-auto py-24 md:p-12 md:aspect-video capitalize text-center md:bg-light bg-mobile-light text-xl md:text-3xl;
 }
 figure {
   @apply md:h-[150px];
