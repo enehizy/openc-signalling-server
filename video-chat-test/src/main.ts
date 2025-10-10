@@ -1,5 +1,5 @@
 import socket from './sockets';
-import { muted } from './video-buttons';
+
 // const connections:{peerConnection:RTCPeerConnection,peerId?:string}[]=[];
 export const connections: Map<string, RTCPeerConnection> = new Map();
 const CANDIDATES = 'icecandidates';
@@ -7,6 +7,7 @@ export const OFFERS = 'offers';
 const ANSWERS = 'answers';
 const JOIN = 'join';
 const NEW_PEER = 'newpeer';
+const INITAIL_AUDIO_STATE = 'initailaudiostate';
 export const PEER_DISCONNECTED = 'peerdisconnected';
 let number_of_video_elements = 1;
 const peerVideoFeeds = document.getElementById(
@@ -21,7 +22,7 @@ const numberOfParticipants = document.getElementById(
   'number-of-particioants'
 ) as HTMLParagraphElement;
 export let userMedia: MediaStream;
-
+let audio_states_for_peers: any[] = [];
 export const getUserAudioOnly = async () => {
   if (!navigator.mediaDevices) {
     console.log('this browser does not support getting usr media');
@@ -90,6 +91,7 @@ const createPeer = (peerId: string) => {
     figcaption.id = `figcaption-${peerId}`;
 
     const stream = e.streams[0];
+    const peer_muted_state = new Map([...audio_states_for_peers]);
 
     if (currentVideoElement) {
       //  only when video is on
@@ -106,7 +108,7 @@ const createPeer = (peerId: string) => {
       currentFigureElement.classList.remove('invisible', 'absolute');
       currentLabelElement.classList.add('hidden');
       currentLabelElement.classList.remove('caption');
-      currentVideoElement.muted = true;
+      // currentVideoElement.muted = false;
       currentVideoElement
         .play()
         .catch((err) => console.error('Play failed:', err));
@@ -121,17 +123,21 @@ const createPeer = (peerId: string) => {
     //    when video is off, show label
     peerVideoFeeds.classList.add('relative');
     label.innerText = `peer ${peerId}`.substring(0, 8);
-    const mic_muted = document.createElement('img') as HTMLImageElement;
-    mic_muted.src = '/mic-muted.svg';
-    mic_muted.id = `mic-muted-${peerId}`;
-    mic_muted.classList.add('margin-0-auto');
-    label.appendChild(mic_muted);
+
+    if (!peer_muted_state.get(peerId)) {
+      const mic_muted = document.createElement('img') as HTMLImageElement;
+      mic_muted.src = '/mic-muted.svg';
+      mic_muted.id = `mic-muted-${peerId}`;
+      mic_muted.classList.add('margin-0-auto');
+      label.appendChild(mic_muted);
+    }
+
     label.classList.add('peer-video-off-label');
     peerVideoFeeds.appendChild(label);
     figure.classList.add('invisible', 'absolute');
     //these video settings apply whether video is on or off
     remoteVideo.id = `video-${peerId}`;
-    remoteVideo.muted = true;
+    remoteVideo.muted = !peer_muted_state.get(peerId);
     remoteVideo.controls = false;
     remoteVideo.playsInline = true;
     remoteVideo.autoplay = true;
@@ -144,6 +150,7 @@ const createPeer = (peerId: string) => {
       arrows.classList.add('md:flex');
       waiting.classList.add('hidden');
     }
+
     peerVideoFeeds.appendChild(figure);
     number_of_video_elements += 1;
     numberOfParticipants.textContent = `${number_of_video_elements}`;
@@ -187,7 +194,7 @@ export const renegotaition = async () => {
   localVideo.srcObject = userMedia;
   localVideo.classList.remove('invisible');
   // videoToggleButton.classList.remove('opacity-30')
-  localVideo.muted = muted;
+  localVideo.muted = true;
   localVideo.play();
 
   for (const [peerId, peerConnection] of connections) {
@@ -297,6 +304,9 @@ socket.on(PEER_DISCONNECTED, async (peerId) => {
   connections.delete(peerId);
 });
 
+socket.on(INITAIL_AUDIO_STATE, (data) => {
+  audio_states_for_peers = [...data];
+});
 document.addEventListener('DOMContentLoaded', async () => {
   await getUserAudioOnly();
 });

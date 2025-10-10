@@ -95,12 +95,13 @@ socket.on('muted', ({ peerId, muted: isMuted }) => {
   mic_muted.classList.add('margin-0-auto');
   // alert(`${peerId} has ${isMuted ? 'muted' : 'unmuted'} their mic`);
   videoElement.muted = isMuted;
+  currentLabelElement.removeChild(currentMicMutedElement);
   if (isMuted) {
     currentLabelElement.appendChild(mic_muted);
     // currentFigureElement?.appendChild(mic_muted);
     return;
   }
-  currentLabelElement.removeChild(currentMicMutedElement);
+
   // currentFigureElement?.removeChild(currentMicMutedElement);
 });
 audioToggleButton?.addEventListener('click', () => {

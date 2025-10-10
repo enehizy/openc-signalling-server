@@ -17,8 +17,9 @@ const connectSocket = (httpsServer: any) => {
   const NEW_PEER = 'newpeer';
 
   const PEER_DISCONNECTED = 'peerdisconnected';
+  const INITAIL_AUDIO_STATE = 'initailaudiostate';
   const peers = new Set();
-
+  const isMutedState: Map<string, boolean> = new Map();
   io.on('connection', (socket) => {
     console.log('connecting to socket');
 
@@ -35,6 +36,7 @@ const connectSocket = (httpsServer: any) => {
       const new_peer_id = socket.id;
       peers.add(new_peer_id);
       io.to(new_peer_id).emit('id', new_peer_id);
+      io.to(new_peer_id).emit(INITAIL_AUDIO_STATE, [...isMutedState]);
       socket.broadcast.emit(NEW_PEER, new_peer_id);
 
       // const id = v4();
@@ -93,6 +95,8 @@ const connectSocket = (httpsServer: any) => {
       socket.disconnect();
     });
     socket.on('muted', ({ peerId, muted }) => {
+      isMutedState.set(peerId, !muted);
+      console.log([...isMutedState]);
       socket.broadcast.emit('muted', { peerId, muted });
     });
     socket.on('video-off', ({ peerId, videoOff }) => {
@@ -102,9 +106,11 @@ const connectSocket = (httpsServer: any) => {
       console.log('User disconnected:', socket.id);
 
       io.emit(PEER_DISCONNECTED, socket.id);
+      isMutedState.delete(socket.id);
       peers.delete(socket.id);
       // Check if all users are disconnected
       if (io.engine.clientsCount === 0) {
+        isMutedState.clear();
         peers.clear();
         console.log('🚨 All users have disconnected! Server is empty.');
       }
