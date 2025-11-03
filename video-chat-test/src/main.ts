@@ -47,12 +47,46 @@ export const getUserAudioOnly = async () => {
 };
 const hostname = location.hostname;
 console.log('hostname', hostname);
+// const iceServers = [
+//   { urls: 'stun:stun.l.google.com:19302' },
+//   {
+//     urls: 'turn:relay1.expressturn.com:3478',
+//     username: 'efFO9YFJ30BK11FWI6',
+//     credential: 'U4VbTHpVOqFgYk21',
+//   },
+// ];
+const username = '000000002077523390';
+const password = 'knO3F7FciRHD34g2';
 const iceServers = [
+  // Free STUN for quick direct connections
   { urls: 'stun:stun.l.google.com:19302' },
+
+  // Global (auto-routes to closest server, e.g., London for UK)
   {
-    urls: 'turn:relay1.expressturn.com:3478',
-    username: 'efFO9YFJ30BK11FWI6',
-    credential: 'U4VbTHpVOqFgYk21',
+    urls: 'turn:global.expressturn.com:3478?transport=udp',
+    username: `${username}`,
+    credential: `${password}`,
+  },
+
+  // Explicit London (forces low-latency UK relay)
+  {
+    urls: 'turn:london.expressturn.com:3478?transport=udp',
+    username: `${username}`,
+    credential: `${password}`,
+  },
+
+  // TCP fallback (if UDP is blocked)
+  {
+    urls: 'turn:global.expressturn.com:3478?transport=tcp',
+    username: `${username}`,
+    credential: `${password}`,
+  },
+
+  // Secure TLS (bypasses strict firewalls)
+  {
+    urls: 'turns:global.expressturn.com:5349?transport=tcp',
+    username: `${username}`,
+    credential: `${password}`,
   },
 ];
 const createPeer = (peerId: string) => {
