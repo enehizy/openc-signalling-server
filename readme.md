@@ -1,4 +1,4 @@
-LINKS : ec2-54-175-234-64.compute-1.amazonaws.com ,https://openc-signalling-server.onrender.com/
+LINKS : https://h7vttsuz2c.us-east-1.awsapprunner.com/ ,https://openc-signalling-server.onrender.com/
 
 # WebRTC Signaling Server
 
