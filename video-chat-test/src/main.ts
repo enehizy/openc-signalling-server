@@ -21,6 +21,7 @@ const localVideo = document.getElementById('localVideo') as HTMLVideoElement;
 const numberOfParticipants = document.getElementById(
   'number-of-particioants'
 ) as HTMLParagraphElement;
+
 export let userMedia: MediaStream;
 let audio_states_for_peers: any[] = [];
 export const getUserAudioOnly = async () => {
