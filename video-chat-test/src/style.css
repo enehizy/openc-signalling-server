@@ -44,7 +44,10 @@ figure {
 .fig-caption {
   @apply text-white absolute text-left bg-modal-overlay bottom-0 w-full pl-5 pr-10 capitalize;
 }
-
+.icon-cont > button{
+  transform: scale(0.75);
+  cursor: pointer;
+}
 /* figure > video {
   width: 100%;
   height: auto;
