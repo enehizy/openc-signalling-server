@@ -56,40 +56,67 @@ console.log('hostname', hostname);
 //     credential: 'U4VbTHpVOqFgYk21',
 //   },
 // ];
-const username = '000000002077523390';
-const password = 'knO3F7FciRHD34g2';
-const iceServers = [
-  // Free STUN for quick direct connections
-  { urls: 'stun:stun.l.google.com:19302' },
-
-  // Global (auto-routes to closest server, e.g., London for UK)
-  {
-    urls: 'turn:global.expressturn.com:3478?transport=udp',
-    username: `${username}`,
-    credential: `${password}`,
-  },
-
-  // Explicit London (forces low-latency UK relay)
-  {
-    urls: 'turn:london.expressturn.com:3478?transport=udp',
-    username: `${username}`,
-    credential: `${password}`,
-  },
-
-  // TCP fallback (if UDP is blocked)
-  {
-    urls: 'turn:global.expressturn.com:3478?transport=tcp',
-    username: `${username}`,
-    credential: `${password}`,
-  },
-
-  // Secure TLS (bypasses strict firewalls)
-  {
-    urls: 'turns:global.expressturn.com:5349?transport=tcp',
-    username: `${username}`,
-    credential: `${password}`,
-  },
+// const username = '000000002077523390';
+// const password = 'knO3F7FciRHD34g2';
+let iceServers = [
+  { urls: 'stun:stun.l.google.com:19302' }, // fallback default
 ];
+
+// Fetch Xirsys in background and update
+getXirsysIceServers().then((servers) => {
+  iceServers = servers;
+});
+async function getXirsysIceServers() {
+  const response = await fetch(
+    'https://global.xirsys.net/_turn/myChannel', // replace myChannel with yours
+    {
+      method: 'PUT',
+      headers: {
+        Authorization:
+          'Basic ' + btoa('enehizy:a5f349f8-1878-11f1-841a-0242ac130002'), // replace with yours
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ format: 'urls' }),
+    }
+  );
+
+  const data = await response.json();
+  console.log('Xirsys ICE servers:', data);
+  return data.v.iceServers; // array of STUN/TURN configs
+}
+
+// const iceServers = [
+//   // Free STUN for quick direct connections
+//   { urls: 'stun:stun.l.google.com:19302' },
+
+//   // Global (auto-routes to closest server, e.g., London for UK)
+//   {
+//     urls: 'turn:global.expressturn.com:3478?transport=udp',
+//     username: `${username}`,
+//     credential: `${password}`,
+//   },
+
+//   // Explicit London (forces low-latency UK relay)
+//   {
+//     urls: 'turn:london.expressturn.com:3478?transport=udp',
+//     username: `${username}`,
+//     credential: `${password}`,
+//   },
+
+//   // TCP fallback (if UDP is blocked)
+//   {
+//     urls: 'turn:global.expressturn.com:3478?transport=tcp',
+//     username: `${username}`,
+//     credential: `${password}`,
+//   },
+
+//   // Secure TLS (bypasses strict firewalls)
+//   {
+//     urls: 'turns:global.expressturn.com:5349?transport=tcp',
+//     username: `${username}`,
+//     credential: `${password}`,
+//   },
+// ];
 const createPeer = (peerId: string) => {
   let newPeer: RTCPeerConnection;
   if (connections.has(peerId)) {
